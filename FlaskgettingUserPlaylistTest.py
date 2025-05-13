@@ -14,7 +14,7 @@ secret_key=os.urandom(12)
 app = Flask(__name__)
 app.secret_key = secret_key
 
-REDIRECT_URI = "http://127.0.0.1:5000/callback"
+REDIRECT_URI = "http://127.0.0.1:5000/callbacks"
 TOKEN_URL = "https://accounts.spotify.com/api/token"
 API_BASE_URL = "https://api.spotify.com/v1/"
 AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -38,7 +38,7 @@ def login():
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
     return redirect(auth_url)
 
-@app.route('/callback')
+@app.route('/callbacks')
 def callback():
     if 'error' in request.args:
         return jsonify({"error": request.args['error']})
@@ -81,14 +81,33 @@ def currently_playing():
     access_token = session.get('access_token')
     if not access_token:
         return redirect('/login')
+    
     if datetime.now().timestamp() > session.get('expires_at'):
         return redirect('/refresh_token')
+
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
+    
     response = requests.get(API_BASE_URL + 'me/player/currently-playing', headers=headers)
-    current_track_info = response.json()
-    print(current_track_info)
+
+    # Check for 204 (no content)
+    if response.status_code == 204:
+        return jsonify({'message': 'No track is currently playing.'})
+
+    # Check for other errors
+    if response.status_code != 200:
+        return jsonify({
+            'error': 'Failed to fetch current track info',
+            'status_code': response.status_code,
+            'response_text': response.text
+        }), response.status_code
+
+    try:
+        current_track_info = response.json()
+    except ValueError:
+        return jsonify({'error': 'Invalid JSON response from Spotify'}), 500
+
     if 'item' in current_track_info:
         track_name = current_track_info['item']['name']
         artist_name = current_track_info['item']['artists'][0]['name']
@@ -101,7 +120,6 @@ def currently_playing():
             'playing': playing
         })
     else:
-        print(current_track_info)
         return jsonify({'message': 'No track is currently playing.'})
 
 @app.route('/refresh_token')
