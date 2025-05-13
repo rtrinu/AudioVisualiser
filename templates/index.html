@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundwave - Spotify Audio Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <span>Soundwave</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Experience Your Music <span class="highlight">Visually</span></h1>
+                <p>Transform your Spotify tracks into stunning visual experiences with our real-time audio visualizer.</p>
+                <a href="{{url_for('login')}}" class="spotify-login-btn">
+                    <svg viewBox="0 0 24 24" width="24" height="24" class="spotify-icon">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.48.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                    Login with Spotify
+                </a>
+            </div>
+            <div class="hero-visual">
+                <div class="visualizer-preview">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Real-time Visualization</h3>
+                    <p>See your music come to life with responsive, real-time visual effects that sync perfectly with the beat.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Multiple Styles</h3>
+                    <p>Choose from various visualization styles to match your mood or music genre.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsive Design</h3>
+                    <p>Enjoy your visualizations on any device - desktop, tablet, or mobile.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔊</div>
+                    <h3>Full Spotify Integration</h3>
+                    <p>Access your playlists, liked songs, and discover new music without leaving the app.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Login with Spotify</h3>
+                    <p>Connect your Spotify account with a single click.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Select a Track</h3>
+                    <p>Choose any song from your Spotify library or search for something new.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy the Show</h3>
+                    <p>Watch as your music transforms into stunning visual patterns.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>Soundwave</span>
+            </div>
+            <div class="footer-links">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <p>Email: info@soundwave-visualizer.com</p>
+                <p>Twitter: @soundwave_viz</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Soundwave. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
