@@ -1,67 +1,160 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Spotify Web Playback SDK Quick Start</title>
+    <title>Spotify Web Playback SDK Premium Check</title>
+    <style>
+        #playback-status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .status-connecting { color: orange; }
+        .status-connected { color: green; }
+        .status-error, .status-offline { color: red; }
+    </style>
   </head>
   <body>
-    <h1>Spotify Web Playback SDK Quick Start</h1>
+    <h1>Spotify Web Playback SDK Premium Verification</h1>
+
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
-    <div id="playback-info">
-      <div id ="current-track">Current Track: {{current_track_name}}</div>
-      <div id="current-artist">Current Artist: {{current_artist_name}}</div>
-      <div id="current-device">Device Name: {{current_device_name}} </div>
-    </div>
+
+    <div id="playback-status">Player Status: Loading...</div>
+    <div id="account-details">Account Details: Checking...</div>
+
+    <div id="current-track">Current Track: {{current_track_name}}</div>
+    <div id="current-artist">Current Artist: {{current_artist_name}}</div>
+    <div id="current-device">Device Name: {{current_device_name}}</div>
+
+    <button id="checkAccountType">Check Account Type</button>
     <button id="togglePlay">Toggle Play</button>
-    <button id="prevTrack">Previous Track</button>
-    <button id="nextTrack">Next Track</button>
 
     <script>
+        // Function to fetch account details
+        async function checkAccountDetails(token) {
+            try {
+                const response = await fetch('https://api.spotify.com/v1/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                const accountDetailsElement = document.getElementById('account-details');
+                accountDetailsElement.innerHTML = `
+                    Account Type: ${data.product || 'Unknown'}<br>
+                    Display Name: ${data.display_name || 'N/A'}<br>
+                    Country: ${data.country || 'N/A'}
+                `;
+
+                console.log('Full Account Details:', data);
+                return data.product === 'premium';
+            } catch (error) {
+                console.error('Error fetching account details:', error);
+                return false;
+            }
+        }
+
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = '{{access_token}}'; 
-            const device_id = '{{current_device_id}}'; 
+            const token = '{{access_token}}';
+            const statusElement = document.getElementById('playback-status');
+            const deviceElement = document.getElementById('current-device');
+
+            // Account Type Check Button
+            document.getElementById('checkAccountType').onclick = async function() {
+                const isPremium = await checkAccountDetails(token);
+                alert(isPremium ? 'Premium Account Confirmed!' : 'Not a Premium Account');
+            };
+
+            // Comprehensive error logging
+            const logErrorDetails = (errorType, message) => {
+                console.error(`${errorType} Error:`, message);
+                statusElement.innerText = `Player Status: ${errorType} Error (${message})`;
+                statusElement.className = 'status-error';
+
+                // Additional diagnostic information
+                const diagnosticInfo = `
+                    Error Type: ${errorType}
+                    Message: ${message}
+                    Potential Causes:
+                    - Incorrect OAuth Scopes
+                    - Token Expiration
+                    - Non-Premium Account
+                    - Network Issues
+                `;
+                console.log('Diagnostic Information:', diagnosticInfo);
+            };
+
+            // Validate token before player initialization
+            if (!token || token === '') {
+                logErrorDetails('Authentication', 'Token missing');
+                return;
+            }
+
             const player = new Spotify.Player({
-                name: 'Web Playback SDK Quick Start Player',
+                name: 'Web Playback SDK Premium Check', 
                 getOAuthToken: cb => { cb(token); },
                 volume: 0.5,
                 enableMediaSession: true
             });
 
-            // Ready
+            // Comprehensive Event Listeners
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
-                document.getElementById('current-device').innerText = "Device Name: " + device_id;
+                statusElement.innerText = 'Player Status: Connected (Ready)';
+                statusElement.className = 'status-connected';
+                deviceElement.innerText = `Device Name: Web Playback SDK (${device_id})`;
+
+                // Immediately check account type on successful connection
+                checkAccountDetails(token);
             });
 
-            // Not Ready
             player.addListener('not_ready', ({ device_id }) => {
-                console.log('Device ID has gone offline', device_id);
+                logErrorDetails('Not Ready', `Device ${device_id} offline`);
             });
 
             player.addListener('initialization_error', ({ message }) => {
-                console.error(message);
+                logErrorDetails('Initialization', message);
             });
 
             player.addListener('authentication_error', ({ message }) => {
-                console.error(message);
+                logErrorDetails('Authentication', message);
             });
 
             player.addListener('account_error', ({ message }) => {
-                console.error(message);
+                logErrorDetails('Account', message);
+                
+                // Attempt to fetch account details to diagnose
+                checkAccountDetails(token);
             });
 
-            document.getElementById('togglePlay').onclick = function() {
-              player.togglePlay().then(() => {
-                console.log('Toggled playback!');
-              });
-            };
+            player.addListener('playback_error', ({ message }) => {
+                logErrorDetails('Playback', message);
+            });
 
+            // Connect the Player with Enhanced Logging
             player.connect().then(success => {
                 if (success) {
-                    console.log('The Web Playback SDK successfully connected to Spotify!');
+                    console.log('SDK Connection Initiated Successfully');
+                } else {
+                    logErrorDetails('Connection', 'Initial Connection Failed');
                 }
+            }).catch(error => {
+                logErrorDetails('Connection', error.toString());
             });
-        }
-    </script>
 
+            // Toggle Play with Error Handling
+            document.getElementById('togglePlay').onclick = function() {
+                if (player && player._options && player._options.id) {
+                    player.togglePlay()
+                        .then(() => console.log('Playback Toggled'))
+                        .catch(error => {
+                            console.error('Toggle Play Error:', error);
+                            alert(`Toggle Play Failed: ${error.message}`);
+                        });
+                } else {
+                    console.warn('Player Not Ready for Playback');
+                }
+            };
+        };
+    </script>
   </body>
 </html>
