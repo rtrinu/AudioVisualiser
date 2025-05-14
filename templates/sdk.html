@@ -6,19 +6,30 @@
   <body>
     <h1>Spotify Web Playback SDK Quick Start</h1>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <div id="playback-info">
+      <div id ="current-track">Current Track: {{current_track_name}}</div>
+      <div id="current-artist">Current Artist: {{current_artist_name}}</div>
+      <div id="current-device">Device Name: {{current_device_name}} </div>
+    </div>
     <button id="togglePlay">Toggle Play</button>
+    <button id="prevTrack">Previous Track</button>
+    <button id="nextTrack">Next Track</button>
+
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
             const token = '{{access_token}}'; 
+            const device_id = '{{current_device_id}}'; 
             const player = new Spotify.Player({
                 name: 'Web Playback SDK Quick Start Player',
                 getOAuthToken: cb => { cb(token); },
-                volume: 0.5
+                volume: 0.5,
+                enableMediaSession: true
             });
 
             // Ready
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
+                document.getElementById('current-device').innerText = "Device Name: " + device_id;
             });
 
             // Not Ready
@@ -39,10 +50,16 @@
             });
 
             document.getElementById('togglePlay').onclick = function() {
-              player.togglePlay();
+              player.togglePlay().then(() => {
+                console.log('Toggled playback!');
+              });
             };
 
-            player.connect();
+            player.connect().then(success => {
+                if (success) {
+                    console.log('The Web Playback SDK successfully connected to Spotify!');
+                }
+            });
         }
     </script>
 
