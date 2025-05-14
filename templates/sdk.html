@@ -2,52 +2,27 @@
 <html>
   <head>
     <title>Spotify Playback</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        #connection-status {
-            margin: 20px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .connected {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .disconnected {
-            background-color: #f44336;
-            color: white;
-        }
-        #current-track-info {
-            margin-bottom: 20px;
-        }
-        #togglePlay {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
   </head>
   <body>
-    <div id="connection-status">Connecting to Spotify...</div>
+    <div class="container">
+      <h1>Spotify Web Player</h1>
+      
+      <div id="connection-status">Connecting to Spotify...</div>
 
-    <div id="current-track-info">
-        <h2 id="track-name">No Track Playing</h2>
-        <p id="artist-name">-</p>
+      <div id="current-track-info">
+          <h2 id="track-name">No Track Playing</h2>
+          <p id="artist-name">-</p>
+      </div>
+      <button class="controls"id="previousTrack" disabled>Previous Track</button>
+      <button class="controls"id="togglePlay" disabled>Play/Pause</button>
+      <button class="controls"id="nextTrack" disabled>Next Track</button>
+
+      <div id="device-info">
+          <p>Device Name: <span id="device-name">-</span></p>
+          <p>Device ID: <span id="device-id">-</span></p>
+      </div>
     </div>
-
-    <button id="togglePlay" disabled>Play/Pause</button>
-
-    <div id="device-info">
-        <p>Device Name: <span id="device-name">-</span></p>
-        <p>Device ID: <span id="device-id">-</span></p>
-    </div>
-
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
@@ -56,6 +31,8 @@
             const trackNameElement = document.getElementById('track-name');
             const artistNameElement = document.getElementById('artist-name');
             const togglePlayButton = document.getElementById('togglePlay');
+            const NextButton = document.getElementById('nextTrack');
+            const PreviousButton = document.getElementById('previousTrack');
             const deviceNameElement = document.getElementById('device-name');
             const deviceIdElement = document.getElementById('device-id');
 
@@ -75,7 +52,7 @@
             }
 
             const player = new Spotify.Player({
-                name: 'Web Playback Player', 
+                name: 'Rohan\'s Web Player', 
                 getOAuthToken: cb => { cb(token); },
                 volume: 0.5
             });
@@ -86,6 +63,8 @@
                 
 
                 togglePlayButton.disabled = false;
+                NextButton.disabled = false;
+                PreviousButton.disabled = false;
 
                 deviceIdElement.textContent = device_id;
                 deviceNameElement.textContent = 'Web Playback SDK';
@@ -128,13 +107,28 @@
                 }
             });
 
-
             togglePlayButton.onclick = () => {
                 player.togglePlay().then(() => {
                     console.log('Playback Toggled');
                 }).catch(error => {
                     console.error('Toggle Play Error:', error);
                     updateConnectionStatus(`Play/Pause Error: ${error.message}`, false);
+                });
+            };
+            NextButton.onclick = () => {
+                player.nextTrack().then(() => {
+                    console.log('Skipped to Next Track');
+                }).catch(error => {
+                    console.error('Skip Next Error:', error);
+                    updateConnectionStatus(`Next Track Error: ${error.message}`, false);
+                });
+            };
+            PreviousButton.onclick = () => {
+                player.previousTrack().then(() => {
+                    console.log('Skipped to Previous Track');
+                }).catch(error => {
+                    console.error('Skip Previous Error:', error);
+                    updateConnectionStatus(`Previous Track Error: ${error.message}`, false);
                 });
             };
 

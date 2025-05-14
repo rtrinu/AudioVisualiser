@@ -1,0 +1,102 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #181818;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin-top: 40px;
+}
+
+h1 {
+  color: #1db954;
+  margin-bottom: 30px;
+}
+
+#connection-status {
+  margin: 20px 0;
+  padding: 12px;
+  border-radius: 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.connected {
+  background-color: #1db954;
+  color: white;
+}
+
+.disconnected {
+  background-color: #e91429;
+  color: white;
+}
+
+#current-track-info {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #282828;
+  border-radius: 8px;
+}
+
+#track-name {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+#artist-name {
+  color: #b3b3b3;
+  font-size: 18px;
+}
+
+.controls {
+  padding: 12px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.controls:hover:not(:disabled) {
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+.controls:disabled {
+  background-color: #535353;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#device-info {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #282828;
+  border-radius: 8px;
+  color: #b3b3b3;
+}
+
+#device-info p {
+  margin: 8px 0;
+}
+
+#device-id,
+#device-name {
+  color: #ffffff;
+  font-family: monospace;
+  background-color: #333;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
