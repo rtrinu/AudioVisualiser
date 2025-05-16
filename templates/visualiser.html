@@ -6,7 +6,6 @@
     <title>Spotify Audio Visualization</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
 </head>
-<body>
     <section id="player">
         <div id="title">
             <p>Spotify Player</p>
@@ -23,6 +22,11 @@
             <button class="controls" id="previous">Previous Track</button>
             <button class="controls" id="togglePlay">Play/Pause</button>
             <button class="controls" id="next">Next Track</button>
+        </div>
+    </section>
+    <section id="visualisation">
+        <div id="visualisation-container">
+            <canvas id="visualiser"></canvas>
         </div>
     </section>
 

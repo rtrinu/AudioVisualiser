@@ -1,3 +1,9 @@
+let audioContext;
+let audioElement;
+let dataArray;
+const currentTrackElement = document.getElementById('current-track');
+
+
 window.onSpotifyWebPlaybackSDKReady = () => {
     const token = document.getElementById('access-token').getAttribute('data-access-token');
     const connectionStatusElement = document.getElementById('connection-status');
@@ -8,6 +14,10 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     const nextTrackButton = document.getElementById('next');
     const deviceNameElement = document.getElementById('device-name');
     const deviceIdElement = document.getElementById('device-id');
+    const visualiser = document.getElementById('visualiser');
+    const ctx = visualiser.getContext('2d');
+    visualiser.width = window.innerWidth;
+    visualiser.height = window.innerHeight;
 
   const updateConnectionStatus = (status, isConnected) => {
     if (window.statusTimeoutId) {
@@ -37,8 +47,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         return;
     }
 
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+
     const player = new Spotify.Player({
-        name: 'Web Playback Player', 
+        name: 'Test Playback Player', 
         getOAuthToken: cb => { cb(token); },
         volume: 0.5
     });
@@ -50,12 +67,39 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
         deviceIdElement.textContent = device_id;
         deviceNameElement.textContent = 'Web Playback SDK';
+        player.getCurrentState().then(state => {
+            if (!state){
+                console.log('No track currently playing');
+                return;
+            }
+            const currentTrackUri = state.track_window.current_track.uri;
+            console.log('Current Track URI:', currentTrackUri);
+        });
+
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyzer = audioContext.createAnalyser();
+            analyzer.fftSize = 2048;
+            
+            // Connect to the player's audio output
+            player.getAudioElement().then(audioElement => {
+                console.log('Audio Element Connected:', audioElement !== null);
+                console.log('Audio Element:', audioElement); // Shows the full audio element details
+                const source = audioContext.createMediaElementSource(audioElement);
+                source.connect(analyzer);
+                analyzer.connect(audioContext.destination);
+                
+            });
+        } catch (error) {
+            console.error('Audio Context Error:', error);
+        }
 
         console.log('Spotify Device Connected:', {
             deviceId: device_id,
             deviceName: 'Web Playback SDK'
         });
     });
+
 
     player.addListener('not_ready', ({ device_id }) => {
         updateConnectionStatus('Disconnected from Spotify', false);
@@ -83,6 +127,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             artistNameElement.textContent = track.artists.map(artist => artist.name).join(', ');
             
             togglePlayButton.textContent = state.paused ? 'Play' : 'Pause';
+        }
+        const { current_track } = state.track_window;
+        if (current_track && currentTrackElement) {
+            currentTrackElement.textContent = current_track.name;
+        }
+
+        if (state.playing) {
+            initializeVisualization();
         }
     });
 
