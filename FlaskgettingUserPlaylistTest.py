@@ -180,7 +180,7 @@ def sdk():
     current_device_name = session.get('device_name')
     current_device_id = session.get('device_id')
     
-    return render_template('sdk.html', 
+    return render_template('visualiser.html', 
                            access_token=access_token,
                            current_track_name=current_track_name,
                            current_artist_name=current_artist_name,

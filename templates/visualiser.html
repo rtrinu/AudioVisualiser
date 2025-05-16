@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Audio Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+</head>
+<body>
+    <section id="player">
+        <div id="title">
+            <p>Spotify Player</p>
+        </div>
+        <div id="current_track_info">
+            <div id="track-name">Track Name</div>
+            <div id="artist-name">Artist Name</div>
+        </div>
+        <div id="connection-status" class="disconnected">Disconnected</div>
+        <div id="device-info">
+            <div id="device-name">Not Connected</div>
+        </div>
+        <div class="controls-container">
+            <button class="controls" id="previous">Previous Track</button>
+            <button class="controls" id="togglePlay">Play/Pause</button>
+            <button class="controls" id="next">Next Track</button>
+        </div>
+    </section>
+
+    <div id="access-token" data-access-token="{{ access_token }}"></div>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/meyda@5.2.1/dist/meyda.min.js"></script>
+    <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+</body>
+</html>

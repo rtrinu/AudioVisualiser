@@ -1,102 +1,117 @@
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #121212;
-  color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  text-align: center;
-  background-color: #181818;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  margin-top: 40px;
+#player {
+    background-color: #282828;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-h1 {
-  color: #1db954;
-  margin-bottom: 30px;
+#title {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-#connection-status {
-  margin: 20px 0;
-  padding: 12px;
-  border-radius: 24px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+#title p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1DB954;
+    margin: 0;
 }
 
-.connected {
-  background-color: #1db954;
-  color: white;
-}
-
-.disconnected {
-  background-color: #e91429;
-  color: white;
-}
-
-#current-track-info {
-  margin: 30px 0;
-  padding: 20px;
-  background-color: #282828;
-  border-radius: 8px;
+#current_track_info {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #333333;
+    border-radius: 4px;
 }
 
 #track-name {
-  font-size: 24px;
-  margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 #artist-name {
-  color: #b3b3b3;
-  font-size: 18px;
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 .controls {
-  padding: 12px 30px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #1db954;
-  color: white;
-  border: none;
-  border-radius: 24px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-.controls:hover:not(:disabled) {
-  background-color: #1ed760;
-  transform: scale(1.05);
+.controls:hover {
+    background-color: #1ed760;
 }
 
 .controls:disabled {
-  background-color: #535353;
-  cursor: not-allowed;
-  opacity: 0.7;
+    background-color: #535353;
+    cursor: not-allowed;
+}
+
+#connection-status {
+    text-align: center;
+    padding: 5px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.connected {
+    background-color: #1DB954;
+}
+
+.disconnected {
+    background-color: #E22134;
 }
 
 #device-info {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: #282828;
-  border-radius: 8px;
-  color: #b3b3b3;
+    font-size: 12px;
+    color: #b3b3b3;
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #333333;
+    border-radius: 4px;
 }
 
-#device-info p {
-  margin: 8px 0;
+#access-token {
+    display: none;
 }
 
-#device-id,
-#device-name {
-  color: #ffffff;
-  font-family: monospace;
-  background-color: #333;
-  padding: 2px 6px;
+#connection-status {
+  text-align: center;
+  padding: 5px;
+  margin: 10px 0;
   border-radius: 4px;
+  transition: opacity 1s ease-out;
+}
+
+#connection-status.fading {
+  opacity: 0.3;
 }
